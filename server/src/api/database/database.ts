@@ -1,8 +1,4 @@
-import { BaseEntity, DataSource, EntityTarget } from "typeorm"
-import { typeOrmConfig } from "../../config/typeorm.config"
+import { DataSource } from "typeorm";
+import { typeOrmConfig } from "../../config/typeorm.config";
 
-export const dataSource = new DataSource(typeOrmConfig)
-
-export const getRepository = (entity: EntityTarget<BaseEntity>) =>{
-    return dataSource.getRepository(entity);
-}
+export const dataSource = new DataSource(typeOrmConfig);

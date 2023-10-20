@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+
+service AuthService{
+    rpc Login(LoginDto) returns (User){}
+    rpc Register(RegisterDto) returns (User){}
+}
+
+
+message User{
+    int32 id = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message LoginDto{
+    string email = 1;
+    string password = 2;
+}
+
+
+message RegisterDto{
+    string email = 1;
+    string password = 2;
+}

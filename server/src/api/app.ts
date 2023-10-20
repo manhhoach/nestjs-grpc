@@ -1,16 +1,33 @@
-import express, { Request, Response, NextFunction } from "express";
-const app = express();
+import { loadPackageDefinition, Server } from "@grpc/grpc-js";
+import { loadSync } from "@grpc/proto-loader";
+import { join } from "path";
+import * as authService from "./services/auth";
 
-import { responseWithError } from "./helpers/response";
-import routers from "./routers";
+const AUTH_PROTO_PATH = join(__dirname, "../../proto/auth.proto");
+const authPackageDefinition = loadSync(AUTH_PROTO_PATH, {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  arrays: true,
+});
+const authProto: any = loadPackageDefinition(authPackageDefinition);
 
+const server = new Server();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use('/api',routers);
-app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
-  res.json(responseWithError(err));
+server.addService(authProto.AuthService.service, {
+  login: async (call: any, callback: any) => {
+    let data = await authService.login(
+      call.request.email,
+      call.request.password
+    );
+    callback(null, data);
+  },
+  register: (call: any, callback: any) => {
+    callback(
+      null,
+      authService.register(call.request.email, call.request.password)
+    );
+  },
 });
 
-export = app;
+export = server;
