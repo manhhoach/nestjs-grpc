@@ -1,7 +1,8 @@
 import { loadPackageDefinition, Server } from "@grpc/grpc-js";
 import { loadSync } from "@grpc/proto-loader";
 import { join } from "path";
-import * as authService from "./services/auth";
+import * as authController from './controllers/auth'
+import {ProtoGrpcType} from './../proto-out/auth'
 
 const AUTH_PROTO_PATH = join(__dirname, "../../proto/auth.proto");
 const authPackageDefinition = loadSync(AUTH_PROTO_PATH, {
@@ -10,24 +11,13 @@ const authPackageDefinition = loadSync(AUTH_PROTO_PATH, {
   enums: String,
   arrays: true,
 });
-const authProto: any = loadPackageDefinition(authPackageDefinition);
+const Proto = loadPackageDefinition(authPackageDefinition) as unknown as ProtoGrpcType;
 
 const server = new Server();
 
-server.addService(authProto.AuthService.service, {
-  login: async (call: any, callback: any) => {
-    let data = await authService.login(
-      call.request.email,
-      call.request.password
-    );
-    callback(null, data);
-  },
-  register: (call: any, callback: any) => {
-    callback(
-      null,
-      authService.register(call.request.email, call.request.password)
-    );
-  },
+server.addService(Proto.AuthService.service, {
+  login: (req: any, res: any) =>  authController.login(req, res),
+  register: (req: any, res: any) => authController.register(req, res)
 });
 
 export = server;
