@@ -12,7 +12,6 @@ export const register = async (email: string, password: string) => {
 };
 
 export const login = async (email: string, password: string) => {
-  // throw new AppError(400, "ao that nhi")
   let user = await userRepository.findOne({
     where: { email: email } as FindOptionsWhere<BaseEntity>,
   });
@@ -26,3 +25,7 @@ export const login = async (email: string, password: string) => {
     }
   }
 };
+
+export const getAll = async ()=>{
+  return userRepository.find()
+}

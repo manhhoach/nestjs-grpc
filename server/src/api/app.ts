@@ -17,7 +17,8 @@ const server = new Server();
 
 server.addService(Proto.AuthService.service, {
   login: (req: any, res: any) =>  authController.login(req, res),
-  register: (req: any, res: any) => authController.register(req, res)
+  register: (req: any, res: any) => authController.register(req, res),
+  getAll: (req: any, res: any) => authController.getAll(req, res)
 });
 
 export = server;

@@ -2,15 +2,22 @@ syntax = "proto3";
 
 
 service AuthService{
-    rpc Login(LoginDto) returns (User){}
-    rpc Register(RegisterDto) returns (User){}
+    rpc login(LoginDto) returns (User){}
+    rpc register(RegisterDto) returns (User){}
+    rpc getAll(Empty) returns (Users){}
 }
 
+message Empty{
+}
 
 message User{
     int32 id = 1;
     string email = 2;
     string password = 3;
+}
+
+message Users{
+    repeated User users = 1;
 }
 
 message LoginDto{
